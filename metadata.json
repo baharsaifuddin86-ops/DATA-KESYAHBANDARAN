@@ -1,0 +1,6 @@
+{
+  "name": "Data Kesyahbandaran Pelabuhan Binaan PPN Karangantu",
+  "description": "Sistem Informasi dan Infografis Sebaran Pelabuhan Binaan PPN Karangantu, Banten dan Lampung",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
