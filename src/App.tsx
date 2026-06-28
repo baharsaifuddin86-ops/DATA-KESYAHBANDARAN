@@ -236,17 +236,11 @@ export default function App() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="font-display font-extrabold text-lg md:text-xl text-sky-950 tracking-tight leading-none">
-                    DATA KESYAHBANDARAN
+                    Data Kesyahbandaran PPN Karangantu dan Pelabuhan Binaan
                   </h1>
-                  <span className="bg-sky-50 text-sky-700 font-extrabold text-[9px] px-2 py-0.5 rounded border border-sky-200">
-                    PELABUHAN BINAAN PPN KARANGANTU
-                  </span>
-                  <span className="bg-emerald-50 text-emerald-700 font-extrabold text-[9px] px-2 py-0.5 rounded border border-emerald-200">
-                    BANTEN & LAMPUNG
-                  </span>
                 </div>
-                <p className="text-[11px] text-slate-500 font-medium leading-none">
-                  Sistem Informasi dan Infografis Sebaran Pelabuhan Binaan PPN Karangantu, Banten dan Lampung
+                <p className="text-[11px] text-slate-500 font-semibold leading-none">
+                  Sistem Informasi dan Infografis Sebaran Pelabuhan Binaan PPN Karangantu
                 </p>
               </div>
             </div>

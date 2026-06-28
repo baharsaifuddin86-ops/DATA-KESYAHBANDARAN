@@ -5,6 +5,7 @@ import { Port, PortClass } from '../types';
 import InfographicModal from './InfographicModal';
 import bannerImg from '../assets/images/karangantu_banner_1782649561916.jpg';
 import FisheryPortLogo from './FisheryPortLogo';
+import SyahbandarDatabase2026 from './SyahbandarDatabase2026';
 import { 
   ResponsiveContainer, 
   BarChart, 
@@ -1158,28 +1159,10 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
             </div>
           </div>
 
-          {/* Visi & Tujuan Box (Box 9) */}
-          <div className="relative group bg-sky-950 text-sky-100 rounded-2xl p-5 border border-sky-900 flex flex-col md:flex-row items-start md:items-center gap-4 shadow-md">
-            {isEditMode && (
-              <button
-                onClick={() => openEditSection('goals')}
-                className="absolute top-3 right-3 bg-amber-500 hover:bg-amber-600 text-white p-1.5 rounded-lg shadow-xs transition-all flex items-center gap-1 text-[10px] font-bold z-10 cursor-pointer"
-              >
-                <Pencil className="w-3 h-3" />
-                <span>Ubah</span>
-              </button>
-            )}
+          {/* Box 8: Database & Grafik Pelayanan Kesyahbandaran 2026 (Live Sheets Integration) */}
+          <SyahbandarDatabase2026 />
 
-            <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/20 text-sky-300 flex items-center justify-center shrink-0">
-              <Target className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase text-sky-400 tracking-widest block font-display">9. TUJUAN UTAMA INFOGRAFIS</span>
-              <p className="text-xs md:text-sm text-sky-200 mt-1 font-medium leading-relaxed">
-                {infoData.goals}
-              </p>
-            </div>
-          </div>
+
 
           {/* INFOGRAPHIC EDIT MODAL */}
           <InfographicModal
