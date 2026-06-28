@@ -193,8 +193,8 @@ const DEFAULT_INFOGRAPHIC_DATA: InfographicState = {
     { id: '4', no: 4, text: 'Masa adaptasi pelaku usaha terhadap kewajiban VMS dan sistem pelaporan elektronik baru.' }
   ],
   shtiApplications: [
-    { id: '1', year: 'Tahun Lalu', la: 27, lt: 3293, lts: 101, coa: 32 },
-    { id: '2', year: 'Tahun Ini', la: 60, lt: 2239, lts: 103, coa: 82 }
+    { id: '1', year: '2025', la: 27, lt: 3293, lts: 101, coa: 32 },
+    { id: '2', year: '2026', la: 60, lt: 2239, lts: 103, coa: 82 }
   ],
   goals: "Meningkatkan pengawasan, akurasi data, dan kepatuhan pelaku usaha guna mendukung optimalisasi penerimaan PNBP serta kelancaran aktivitas pelayaran di wilayah PPN Karangantu dan pelabuhan binaan.",
   skkpRecap: [
@@ -257,6 +257,19 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
         }
         if (!parsed.pnbpSdaAchievements) {
           parsed.pnbpSdaAchievements = DEFAULT_INFOGRAPHIC_DATA.pnbpSdaAchievements;
+        }
+        if (parsed.shtiApplications) {
+          parsed.shtiApplications = parsed.shtiApplications.map((item: any) => {
+            if (item.year === 'Tahun Lalu') {
+              return { ...item, year: '2025' };
+            }
+            if (item.year === 'Tahun Ini') {
+              return { ...item, year: '2026' };
+            }
+            return item;
+          });
+        } else {
+          parsed.shtiApplications = DEFAULT_INFOGRAPHIC_DATA.shtiApplications;
         }
         return parsed;
       } catch (e) {
@@ -1043,10 +1056,10 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[10px] text-slate-400 font-semibold uppercase tracking-wider bg-slate-50 p-2.5 rounded-xl text-center">
-              <div>LA = Lembar Analisis</div>
-              <div>LT = Lembar Transaksi</div>
-              <div>LTS = Lembar Transaksi Sementara</div>
-              <div>COA = Catch Certificate / SHTI</div>
+              <div>LA = Lembar Awal</div>
+              <div>LT = Lembar turunan</div>
+              <div>LTS = Lembar turunan Sementara</div>
+              <div>COA = Certificate of Admissibility</div>
             </div>
           </div>
 
