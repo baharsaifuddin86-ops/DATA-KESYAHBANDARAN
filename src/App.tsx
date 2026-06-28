@@ -9,6 +9,7 @@ import PortDetailCard from './components/PortDetailCard';
 import StatsDashboard from './components/StatsDashboard';
 import PortFormModal from './components/PortFormModal';
 import { AnimatePresence, motion } from 'motion/react';
+import FisheryPortLogo from './components/FisheryPortLogo';
 import { 
   Anchor, 
   Map, 
@@ -228,8 +229,8 @@ export default function App() {
       <header className="bg-white/80 backdrop-blur-md border-b border-sky-100 sticky top-0 z-[1000] px-6 py-4 shrink-0 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-md border border-sky-400/20">
-              <Anchor className="w-5.5 h-5.5 animate-pulse text-white" />
+            <div className="w-11 h-11 bg-white rounded-xl shadow-xs border border-sky-100 flex items-center justify-center shrink-0 p-0.5">
+              <FisheryPortLogo size={38} className="hover:scale-105 transition-transform" />
             </div>
             <div>
               <div className="flex flex-col gap-1.5">
@@ -366,8 +367,8 @@ export default function App() {
                   />
                 ) : (
                   <div className="w-full h-full bg-white border border-sky-100 rounded-2xl p-12 flex flex-col items-center justify-center text-center gap-4 shadow-md">
-                    <div className="w-16 h-16 rounded-full bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 animate-pulse">
-                      <Anchor className="w-8 h-8" />
+                    <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center animate-pulse">
+                      <FisheryPortLogo size={42} />
                     </div>
                     <div className="max-w-xs">
                       <h3 className="font-display font-bold text-base text-sky-950 tracking-tight">Tidak Ada Pelabuhan Terpilih</h3>

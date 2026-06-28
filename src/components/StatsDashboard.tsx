@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { Port, PortClass } from '../types';
 import InfographicModal from './InfographicModal';
 import bannerImg from '../assets/images/karangantu_banner_1782649561916.jpg';
+import FisheryPortLogo from './FisheryPortLogo';
 import { 
   ResponsiveContainer, 
   BarChart, 
@@ -511,16 +512,16 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
           
           {/* Main Infographic Banner */}
           <div className="relative group overflow-hidden text-white rounded-3xl p-6 md:p-8 border border-sky-950 shadow-xl bg-sky-950 min-h-[160px] flex flex-col justify-between">
-            {/* Real Building Background Image with Premium Dark Overlay */}
+            {/* Real Building Background Image with Premium Realistic Presentation */}
             <div className="absolute inset-0 z-0">
               <img 
                 src={bannerImg} 
                 alt="Kantor PPN Karangantu" 
-                className="w-full h-full object-cover object-center opacity-75 transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover object-center opacity-100 transition-transform duration-700 group-hover:scale-102"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-sky-950/95 via-sky-950/80 to-sky-900/40" />
-              <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-sky-500/20 via-transparent to-transparent opacity-65 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-sky-950/95 via-sky-950/65 to-transparent" />
+              <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-sky-400/25 via-transparent to-transparent opacity-75 pointer-events-none" />
             </div>
 
             <div className="relative z-10 w-full">
@@ -566,8 +567,8 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
               
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center text-sky-300 border border-white/15 shrink-0 shadow-inner">
-                    <Anchor className="w-8 h-8 text-sky-400" />
+                  <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-lg border border-white/10 p-1">
+                    <FisheryPortLogo size={48} className="drop-shadow-sm" />
                   </div>
                   <div>
                     <span className="text-[10px] md:text-xs font-bold tracking-wider text-sky-300 uppercase block mb-1">DATA INFOGRAFIS RESMI KESYAHBANDARAN</span>
