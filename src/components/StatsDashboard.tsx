@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import { Port, PortClass } from '../types';
 import InfographicModal from './InfographicModal';
 import { 
@@ -279,9 +281,48 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
     return DEFAULT_INFOGRAPHIC_DATA;
   });
 
-  const saveInfoData = (newData: InfographicState) => {
+  // Sync with Firestore in real-time
+  useEffect(() => {
+    const docRef = doc(db, 'infographics', 'main');
+    
+    // Seed Firestore if the document doesn't exist
+    const seedFirestoreIfEmpty = async () => {
+      try {
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) {
+          console.log("Seeding default data to Firestore...");
+          await setDoc(docRef, infoData);
+        }
+      } catch (err) {
+        console.error("Error seeding Firestore on startup:", err);
+      }
+    };
+    
+    seedFirestoreIfEmpty();
+
+    // Listen for real-time cloud data changes
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const cloudData = docSnap.data() as InfographicState;
+        setInfoData(cloudData);
+        localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(cloudData));
+      }
+    }, (error) => {
+      console.error("Firestore listen error:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const saveInfoData = async (newData: InfographicState) => {
     setInfoData(newData);
     localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(newData));
+    try {
+      const docRef = doc(db, 'infographics', 'main');
+      await setDoc(docRef, newData);
+    } catch (err) {
+      console.error("Error saving data to Firestore:", err);
+    }
   };
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);

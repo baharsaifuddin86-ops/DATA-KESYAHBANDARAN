@@ -1,0 +1,20 @@
+{
+  "entities": {
+    "InfographicState": {
+      "title": "Infographic State",
+      "description": "State containing all infographics data for Kesyahbandaran",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "goals": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/infographics/{id}": {
+      "schema": "InfographicState",
+      "description": "Global settings and infographics state"
+    }
+  }
+}
