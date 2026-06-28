@@ -3,6 +3,7 @@ import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Port, PortClass } from '../types';
 import InfographicModal from './InfographicModal';
+import bannerImg from '../assets/images/karangantu_banner_1782649561916.jpg';
 import { 
   ResponsiveContainer, 
   BarChart, 
@@ -509,68 +510,79 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
       <div className="flex flex-col gap-6 w-full animate-fadeIn relative text-slate-700">
           
           {/* Main Infographic Banner */}
-          <div className="relative group overflow-hidden bg-gradient-to-r from-sky-950 via-sky-900 to-blue-900 text-white rounded-3xl p-6 md:p-8 border border-sky-850 shadow-lg">
-            <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-sky-500/10 via-transparent to-transparent opacity-60 rounded-r-3xl pointer-events-none" />
-            <div className="absolute top-0 right-1/4 w-32 h-32 bg-sky-600/5 rounded-full blur-2xl pointer-events-none" />
-            
-            {/* Embedded Controls Panel */}
-            <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4 mb-5">
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${isEditMode ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
-                <span className="text-xs text-sky-200 font-bold uppercase tracking-wider">
-                  {isEditMode ? 'Mode Edit Aktif' : 'Mode Tampilan'}
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  onClick={() => setIsEditMode(!isEditMode)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
-                    isEditMode
-                      ? 'bg-amber-500 text-white border-amber-600 shadow-md hover:bg-amber-600'
-                      : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
-                  }`}
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                  <span>{isEditMode ? 'Kunci Edit' : 'Edit Infografis'}</span>
-                </button>
-                {isEditMode && (
-                  <button
-                    onClick={() => openEditSection('banner')}
-                    className="px-3 py-1.5 bg-sky-600/80 hover:bg-sky-600 text-white border border-sky-500/30 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Ubah Teks Banner</span>
-                  </button>
-                )}
-                <button
-                  onClick={handleResetToDefault}
-                  className="px-3 py-1.5 bg-rose-600/85 hover:bg-rose-600 text-white border border-rose-500/30 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
-                  title="Atur ulang ke data asli bawaan"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset</span>
-                </button>
-              </div>
+          <div className="relative group overflow-hidden text-white rounded-3xl p-6 md:p-8 border border-sky-950 shadow-xl bg-sky-950 min-h-[160px] flex flex-col justify-between">
+            {/* Real Building Background Image with Premium Dark Overlay */}
+            <div className="absolute inset-0 z-0">
+              <img 
+                src={bannerImg} 
+                alt="Kantor PPN Karangantu" 
+                className="w-full h-full object-cover object-center opacity-75 transition-transform duration-700 group-hover:scale-105"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-sky-950/95 via-sky-950/80 to-sky-900/40" />
+              <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-sky-500/20 via-transparent to-transparent opacity-65 pointer-events-none" />
             </div>
-            
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-sky-300 border border-white/10 shrink-0 shadow-inner">
-                  <Anchor className="w-8 h-8 text-sky-400" />
+
+            <div className="relative z-10 w-full">
+              {/* Embedded Controls Panel */}
+              <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-4 mb-5">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${isEditMode ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
+                  <span className="text-xs text-sky-200 font-bold uppercase tracking-wider">
+                    {isEditMode ? 'Mode Edit Aktif' : 'Mode Tampilan'}
+                  </span>
                 </div>
-                <div>
-                  <span className="text-[10px] md:text-xs font-bold tracking-wider text-sky-300 uppercase block mb-1">DATA INFOGRAFIS RESMI KESYAHBANDARAN</span>
-                  <h1 className="text-xl md:text-2xl font-display font-black tracking-tight leading-tight uppercase">
-                    {infoData.title}
-                  </h1>
-                  <p className="text-xs text-sky-200/80 mt-1 font-medium">{infoData.subtitle}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => setIsEditMode(!isEditMode)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer ${
+                      isEditMode
+                        ? 'bg-amber-500 text-white border-amber-600 shadow-md hover:bg-amber-600'
+                        : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+                    }`}
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    <span>{isEditMode ? 'Kunci Edit' : 'Edit Infografis'}</span>
+                  </button>
+                  {isEditMode && (
+                    <button
+                      onClick={() => openEditSection('banner')}
+                      className="px-3 py-1.5 bg-sky-600/80 hover:bg-sky-600 text-white border border-sky-500/30 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Ubah Teks Banner</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={handleResetToDefault}
+                    className="px-3 py-1.5 bg-rose-600/85 hover:bg-rose-600 text-white border border-rose-500/30 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                    title="Atur ulang ke data asli bawaan"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset</span>
+                  </button>
                 </div>
               </div>
+              
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center text-sky-300 border border-white/15 shrink-0 shadow-inner">
+                    <Anchor className="w-8 h-8 text-sky-400" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] md:text-xs font-bold tracking-wider text-sky-300 uppercase block mb-1">DATA INFOGRAFIS RESMI KESYAHBANDARAN</span>
+                    <h1 className="text-xl md:text-2xl font-display font-black tracking-tight leading-tight uppercase">
+                      {infoData.title}
+                    </h1>
+                    <p className="text-xs text-sky-200/80 mt-1 font-medium">{infoData.subtitle}</p>
+                  </div>
+                </div>
 
-              <div className="flex flex-col items-end shrink-0">
-                <div className="bg-sky-500/25 border border-sky-400/40 text-sky-100 text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm uppercase">
-                  <Calendar className="w-3.5 h-3.5" />
-                  {infoData.periodLabel}
+                <div className="flex flex-col items-end shrink-0">
+                  <div className="bg-sky-500/25 border border-sky-400/40 text-sky-100 text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm uppercase">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {infoData.periodLabel}
+                  </div>
                 </div>
               </div>
             </div>

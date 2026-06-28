@@ -258,7 +258,7 @@ export default function App() {
               <span className="text-slate-500 font-medium">Database:</span>
               <strong className="text-slate-700 font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Lokal Aktif ({ports.length})
+                Cloud Firestore ({ports.length})
               </strong>
             </div>
 
