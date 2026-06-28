@@ -9,12 +9,24 @@
         "subtitle": { "type": "string" },
         "goals": { "type": "string" }
       }
+    },
+    "PortsState": {
+      "title": "Ports State",
+      "description": "The complete list of interactive ports on the map",
+      "type": "object",
+      "properties": {
+        "list": { "type": "array" }
+      }
     }
   },
   "firestore": {
     "/infographics/{id}": {
       "schema": "InfographicState",
       "description": "Global settings and infographics state"
+    },
+    "/ports/{id}": {
+      "schema": "PortsState",
+      "description": "Interactive ports database state"
     }
   }
 }

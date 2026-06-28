@@ -1,4 +1,6 @@
 import { useState, useEffect, startTransition } from 'react';
+import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { db } from './firebase';
 import { Port, Region } from './types';
 import { defaultPorts } from './data/defaultPorts';
 import MapComponent from './components/MapComponent';
@@ -33,90 +35,118 @@ export default function App() {
   // Active primary view: 'dashboard' (Initial statistics/infographics) or 'ports' (Interactive map & list)
   const [activeView, setActiveView] = useState<'dashboard' | 'ports'>('dashboard');
 
-  // Load ports from localStorage or fallback to default dataset
+  // Load ports from localStorage or fallback to default dataset and sync with Firestore
   useEffect(() => {
     const saved = localStorage.getItem('sinfonik_ports');
+    const savedTimeStr = localStorage.getItem('sinfonik_ports_updated_at');
+    const localTime = savedTimeStr ? Number(savedTimeStr) : 0;
+    
+    let localPorts: Port[] = [];
     if (saved) {
       try {
         let parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           // Filter out deleted ports (Binuangeun, Bayah, Labuhan Maringgai, Muara Gading Mas, Margasari, Kuala Penet)
           const deletedIds = ['port-banten-3', 'port-banten-5', 'port-lampungtimur-1', 'port-lampungtimur-2', 'port-lampungtimur-3', 'port-lampungtimur-4'];
-          const initialLength = parsed.length;
           parsed = parsed.filter((p: any) => !deletedIds.includes(p.id));
-          let updated = parsed.length !== initialLength;
-          
-          // Ensure all required default ports are present in local storage
-          const requiredIds = [
-            'port-banten-panimbang', 
-            'port-banten-cituis', 
-            'port-lampung-muarapiluk', 
-            'port-lampung-lempasing',
-            'port-lampung-maringgai',
-            'port-lampung-kualapenet'
-          ];
-          let updatedList = [...parsed];
-
-          // Update specific port coordinates if they changed in defaultPorts (e.g. Karangantu, Kronjo, and Labuan)
-          const portsToUpdate = ['port-banten-1', 'port-banten-4', 'port-banten-2'];
-          for (const pid of portsToUpdate) {
-            const index = updatedList.findIndex((p: any) => p.id === pid);
-            if (index !== -1) {
-              const defPort = defaultPorts.find(p => p.id === pid);
-              if (defPort && (updatedList[index].latitude !== defPort.latitude || updatedList[index].longitude !== defPort.longitude)) {
-                updatedList[index].latitude = defPort.latitude;
-                updatedList[index].longitude = defPort.longitude;
-                updated = true;
-              }
-            }
-          }
-
-          for (const reqId of requiredIds) {
-            const hasPort = updatedList.some((p: any) => p.id === reqId);
-            if (!hasPort) {
-              const defaultPort = defaultPorts.find(p => p.id === reqId);
-              if (defaultPort) {
-                updatedList.push(defaultPort);
-                updated = true;
-              }
-            }
-          }
-
-
-
-          if (updated) {
-            setPorts(updatedList);
-            localStorage.setItem('sinfonik_ports', JSON.stringify(updatedList));
-            setSelectedPortId('port-lampung-lempasing'); // Select one of the new ports
-            setActiveView('ports');
-            return;
-          }
-
-          setPorts(parsed);
-          setSelectedPortId(parsed.length > 0 ? parsed[0].id : null);
-          return;
+          localPorts = parsed;
         }
       } catch (e) {
         console.error("Gagal memuat data lokal, menggunakan default.", e);
       }
     }
-    // Fallback
-    setPorts(defaultPorts);
-    if (defaultPorts.length > 0) {
-      const lempasingExists = defaultPorts.some(p => p.id === 'port-lampung-lempasing');
-      if (lempasingExists) {
-        setSelectedPortId('port-lampung-lempasing');
-        setActiveView('ports');
-      } else {
-        setSelectedPortId(defaultPorts[0].id);
-      }
+    
+    // Ensure default required ports are present if we started with fallback
+    if (localPorts.length === 0) {
+      localPorts = defaultPorts;
     }
+
+    const docRef = doc(db, 'ports', 'main');
+
+    const syncPorts = async () => {
+      try {
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          const cloudData = snap.data() as { list: Port[]; updatedAt?: number };
+          const cloudTime = cloudData.updatedAt || 0;
+          
+          if (localPorts.length > 0 && localTime > cloudTime) {
+            console.log("Local ports database is newer. Syncing to Cloud...");
+            await setDoc(docRef, { list: localPorts, updatedAt: localTime });
+            setPorts(localPorts);
+          } else {
+            console.log("Cloud ports database is newer/same. Loading from Cloud...");
+            setPorts(cloudData.list);
+            localStorage.setItem('sinfonik_ports', JSON.stringify(cloudData.list));
+            localStorage.setItem('sinfonik_ports_updated_at', String(cloudTime));
+          }
+        } else {
+          console.log("No cloud ports database found. Uploading local data...");
+          const uploadTime = localTime || Date.now();
+          await setDoc(docRef, { list: localPorts, updatedAt: uploadTime });
+          setPorts(localPorts);
+          localStorage.setItem('sinfonik_ports', JSON.stringify(localPorts));
+          localStorage.setItem('sinfonik_ports_updated_at', String(uploadTime));
+        }
+      } catch (err) {
+        console.error("Error syncing ports database:", err);
+        // Fallback to local
+        setPorts(localPorts);
+      }
+    };
+
+    syncPorts();
+
+    // Listen for real-time cloud data changes
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const cloudData = docSnap.data() as { list: Port[]; updatedAt?: number };
+        const cloudTime = cloudData.updatedAt || 0;
+        
+        setPorts((currentLocal) => {
+          const savedTimeStr = localStorage.getItem('sinfonik_ports_updated_at');
+          const currentLocalTime = savedTimeStr ? Number(savedTimeStr) : 0;
+          
+          if (cloudTime >= currentLocalTime) {
+            localStorage.setItem('sinfonik_ports', JSON.stringify(cloudData.list));
+            localStorage.setItem('sinfonik_ports_updated_at', String(cloudTime));
+            return cloudData.list;
+          }
+          return currentLocal;
+        });
+      }
+    }, (error) => {
+      console.error("Firestore listen error for ports:", error);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Save to LocalStorage whenever ports database changes
-  const savePortsToStorage = (updatedPorts: Port[]) => {
+  // Set default selected port if not set
+  useEffect(() => {
+    if (ports.length > 0 && !selectedPortId) {
+      const lempasingExists = ports.some(p => p.id === 'port-lampung-lempasing');
+      if (lempasingExists) {
+        setSelectedPortId('port-lampung-lempasing');
+      } else {
+        setSelectedPortId(ports[0].id);
+      }
+    }
+  }, [ports, selectedPortId]);
+
+  // Save to LocalStorage and Firestore whenever ports database changes
+  const savePortsToStorage = async (updatedPorts: Port[]) => {
     setPorts(updatedPorts);
+    const now = Date.now();
     localStorage.setItem('sinfonik_ports', JSON.stringify(updatedPorts));
+    localStorage.setItem('sinfonik_ports_updated_at', String(now));
+    
+    try {
+      const docRef = doc(db, 'ports', 'main');
+      await setDoc(docRef, { list: updatedPorts, updatedAt: now });
+    } catch (err) {
+      console.error("Error saving ports to Firestore:", err);
+    }
   };
 
   // Select Port Handler

@@ -126,6 +126,7 @@ export interface InfographicState {
   skkpRecap?: SkkpRecapYear[];
   skkpOfficers?: SkkpOfficer[];
   pnbpSdaAchievements?: PnbpSdaAchievement[];
+  updatedAt?: number;
 }
 
 const DEFAULT_INFOGRAPHIC_DATA: InfographicState = {
@@ -285,27 +286,66 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
   useEffect(() => {
     const docRef = doc(db, 'infographics', 'main');
     
-    // Seed Firestore if the document doesn't exist
-    const seedFirestoreIfEmpty = async () => {
+    const syncData = async () => {
       try {
         const snap = await getDoc(docRef);
-        if (!snap.exists()) {
-          console.log("Seeding default data to Firestore...");
-          await setDoc(docRef, infoData);
+        const localSaved = localStorage.getItem('syahbandar_infographics_v2');
+        let localData: InfographicState | null = null;
+        if (localSaved) {
+          try {
+            localData = JSON.parse(localSaved);
+          } catch (_) {}
+        }
+
+        if (snap.exists()) {
+          const cloudData = snap.data() as InfographicState;
+          
+          // Compare timestamps to see which is newer
+          const cloudTime = cloudData.updatedAt || 0;
+          const localTime = localData?.updatedAt || 0;
+          
+          if (localData && localTime > cloudTime) {
+            // Local is newer, upload to Firestore
+            console.log("Local infographics data is newer. Syncing to Cloud...");
+            await setDoc(docRef, localData);
+            setInfoData(localData);
+          } else {
+            // Cloud is newer (or same), load from Cloud
+            console.log("Cloud infographics data is newer/same. Loading from Cloud...");
+            setInfoData(cloudData);
+            localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(cloudData));
+          }
+        } else {
+          // Cloud doesn't exist, upload local data or defaults
+          console.log("No cloud infographics data found. Uploading local/default data...");
+          const initialData = localData || infoData;
+          const dataToUpload = { ...initialData, updatedAt: initialData.updatedAt || Date.now() };
+          await setDoc(docRef, dataToUpload);
+          setInfoData(dataToUpload);
+          localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(dataToUpload));
         }
       } catch (err) {
-        console.error("Error seeding Firestore on startup:", err);
+        console.error("Error syncing infographics:", err);
       }
     };
-    
-    seedFirestoreIfEmpty();
+
+    syncData();
 
     // Listen for real-time cloud data changes
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         const cloudData = docSnap.data() as InfographicState;
-        setInfoData(cloudData);
-        localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(cloudData));
+        
+        // Only update if cloud has newer data than currently loaded state
+        setInfoData((currentLocal) => {
+          const cloudTime = cloudData.updatedAt || 0;
+          const localTime = currentLocal?.updatedAt || 0;
+          if (cloudTime >= localTime) {
+            localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(cloudData));
+            return cloudData;
+          }
+          return currentLocal;
+        });
       }
     }, (error) => {
       console.error("Firestore listen error:", error);
@@ -315,11 +355,12 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
   }, []);
 
   const saveInfoData = async (newData: InfographicState) => {
-    setInfoData(newData);
-    localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(newData));
+    const dataWithTimestamp = { ...newData, updatedAt: Date.now() };
+    setInfoData(dataWithTimestamp);
+    localStorage.setItem('syahbandar_infographics_v2', JSON.stringify(dataWithTimestamp));
     try {
       const docRef = doc(db, 'infographics', 'main');
-      await setDoc(docRef, newData);
+      await setDoc(docRef, dataWithTimestamp);
     } catch (err) {
       console.error("Error saving data to Firestore:", err);
     }
