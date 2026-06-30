@@ -53,7 +53,7 @@ export default function PortDetailCard({ port, onEditClick }: PortDetailCardProp
       case 'PPS': return 'Pelabuhan Perikanan Samudera (Tipe A)';
       case 'PPN': return 'Pelabuhan Perikanan Nusantara (Tipe B)';
       case 'PPP': return 'Pelabuhan Perikanan Pantai (Tipe C)';
-      case 'PPI': return 'Pangkalan Pendaratan Ikan (Tipe D)';
+      case 'PPI': return 'Pelabuhan Perikanan (Tipe D)';
     }
   };
 
@@ -81,7 +81,7 @@ export default function PortDetailCard({ port, onEditClick }: PortDetailCardProp
         <div className="flex flex-col gap-2 relative">
           <div className="flex items-center justify-between gap-4">
             <span className={`px-2.5 py-1 rounded-md text-[10px] font-extrabold tracking-wide uppercase border ${getClassColor(port.class)}`}>
-              {port.class}
+              {port.class === 'PPI' ? 'PP' : port.class}
             </span>
             <span className="text-[10px] font-semibold bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full text-white/90">
               Wilayah {port.region}
@@ -164,7 +164,7 @@ export default function PortDetailCard({ port, onEditClick }: PortDetailCardProp
           <div className="bg-sky-50/40 rounded-2xl p-5 border border-sky-100 flex flex-col gap-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-center md:text-left">
-                <p className="text-xs text-slate-500">Alat Penangkap Utama</p>
+                <p className="text-xs text-slate-500">Alat Penangkap Ikan Dominan</p>
                 <div className="text-xl md:text-2xl font-display font-extrabold text-sky-950 mt-1">
                   {port.dominantFishingGear}
                 </div>

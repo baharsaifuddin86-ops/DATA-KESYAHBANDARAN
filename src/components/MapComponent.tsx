@@ -35,20 +35,28 @@ export default function MapComponent({
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    // Create the map instance with all zoom/drag interactions disabled (locked)
+    // Define bounds for the locked region (Banten and Lampung surrounding Sunda Strait)
+    const bounds = L.latLngBounds([[-7.2, 104.5], [-4.8, 107.5]]);
+
+    // Create the map instance with all zoom/drag interactions enabled but restricted to the locked bounds
     const map = L.map(mapContainerRef.current, {
       center: [centerLat, centerLng],
       zoom: defaultZoom,
-      zoomControl: false,
-      minZoom: 6,
-      maxZoom: 18,
-      dragging: false,
-      touchZoom: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
+      zoomControl: false, // We will add it manually at 'topright' for premium aesthetics
+      minZoom: 8,
+      maxZoom: 16,
+      dragging: true,
+      touchZoom: true,
+      scrollWheelZoom: true,
+      doubleClickZoom: true,
+      boxZoom: true,
+      keyboard: true,
+      maxBounds: bounds,
+      maxBoundsViscosity: 1.0,
     });
+
+    // Add zoom control on the top right
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
     // Add high resolution Google Earth (Satellite / Hybrid) tile layer
     L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
@@ -96,9 +104,31 @@ export default function MapComponent({
     ports.forEach((port) => {
       // Determine colors and classes
       const isSelected = port.id === selectedPortId;
-      const themeColorClass = port.region === 'Banten' ? 'bg-teal-600 border-teal-200' : 'bg-emerald-600 border-emerald-200';
       const ringClass = isSelected ? 'ring-4 ring-offset-2 ring-indigo-500 scale-110 z-[1000]' : 'hover:scale-105 hover:z-[500]';
-      const colorIndicator = port.region === 'Banten' ? '#0d9488' : '#10b981';
+
+      let themeColorClass = '';
+      let colorIndicator = '';
+      switch (port.class) {
+        case 'PPS':
+          themeColorClass = 'bg-indigo-600 border-indigo-200';
+          colorIndicator = '#4f46e5';
+          break;
+        case 'PPN':
+          themeColorClass = 'bg-sky-600 border-sky-200';
+          colorIndicator = '#0284c7';
+          break;
+        case 'PPP':
+          themeColorClass = 'bg-emerald-600 border-emerald-200';
+          colorIndicator = '#059669';
+          break;
+        case 'PPI':
+          themeColorClass = 'bg-amber-500 border-amber-200';
+          colorIndicator = '#d97706';
+          break;
+        default:
+          themeColorClass = 'bg-slate-600 border-slate-200';
+          colorIndicator = '#475569';
+      }
 
       // Create a gorgeous custom marker icon
       const customIcon = L.divIcon({
@@ -110,7 +140,7 @@ export default function MapComponent({
             
             <!-- Pin Container -->
             <div id="marker-${port.id}" class="w-9 h-9 rounded-xl flex flex-col items-center justify-center text-white font-bold shadow-lg border-2 ${themeColorClass} ${ringClass} transition-all duration-300">
-              <span class="text-[9px] tracking-tighter leading-none">${port.class}</span>
+              <span class="text-[9px] tracking-tighter leading-none">${port.class === 'PPI' ? 'PP' : port.class}</span>
               <svg class="w-3.5 h-3.5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
               </svg>
@@ -143,7 +173,7 @@ export default function MapComponent({
             ${port.name}
           </div>
           <div class="text-[10px] text-slate-500 mt-0.5 flex gap-2">
-            <span>Kelas: <strong class="text-slate-700">${port.class}</strong></span>
+            <span>Kelas: <strong class="text-slate-700">${port.class === 'PPI' ? 'PP' : port.class}</strong></span>
             <span>Wilayah: <strong class="text-slate-700">${port.region}</strong></span>
           </div>
         </div>
@@ -227,7 +257,11 @@ export default function MapComponent({
       </div>
 
       {/* Mini Legend */}
-      <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md px-3 py-2 rounded-lg border border-sky-100 shadow-lg text-[10px] text-slate-600 flex gap-4">
+      <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md px-3 py-2 rounded-lg border border-sky-100 shadow-lg text-[10px] text-slate-600 flex flex-wrap gap-x-4 gap-y-1 max-w-[280px] sm:max-w-none">
+        <div className="flex items-center gap-1.5">
+          <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-[8px]">PPS</span>
+          <span>Samudera</span>
+        </div>
         <div className="flex items-center gap-1.5">
           <span className="px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 font-bold text-[8px]">PPN</span>
           <span>Nusantara</span>
@@ -237,8 +271,8 @@ export default function MapComponent({
           <span>Pantai</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold text-[8px]">PPI</span>
-          <span>Pendaratan</span>
+          <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold text-[8px]">PP</span>
+          <span>Pelabuhan Perikanan</span>
         </div>
       </div>
     </div>

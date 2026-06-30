@@ -443,7 +443,7 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
     { name: 'PPS (Samudera)', value: classDistribution['PPS'] || 0, color: '#6366f1' },
     { name: 'PPN (Nusantara)', value: classDistribution['PPN'] || 0, color: '#06b6d4' },
     { name: 'PPP (Pantai)', value: classDistribution['PPP'] || 0, color: '#10b981' },
-    { name: 'PPI (Pendaratan)', value: classDistribution['PPI'] || 0, color: '#f59e0b' },
+    { name: 'PP (Pelabuhan Perikanan)', value: classDistribution['PPI'] || 0, color: '#f59e0b' },
   ].filter(d => d.value > 0);
 
   // Permit Type Distribution (Daerah vs Pusat)
@@ -897,7 +897,7 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
                           onClick={() => onPortClick?.(port.id)}
                           className="text-left font-black text-sky-600 hover:text-sky-800 hover:underline focus:outline-hidden focus:underline transition-colors cursor-pointer"
                         >
-                          {port.name.replace('Pelabuhan Perikanan ', 'PP ').replace('Pangkalan Pendaratan Ikan ', 'PPI ')}
+                          {port.name.replace('Pelabuhan Perikanan (PP) ', 'PP ').replace('Pelabuhan Perikanan (PPI) ', 'PP ').replace('Pelabuhan Perikanan ', 'PP ')}
                         </button>
                       </td>
                       <td className="py-3 px-4 text-slate-700 font-semibold">{port.dominantFishingGear}</td>
@@ -930,7 +930,7 @@ export default function StatsDashboard({ ports, onSelectRegion, selectedRegion, 
                 </div>
                 <div>
                   <h4 className="font-display font-black text-xs uppercase text-slate-850 tracking-wider">Rekap Penerbitan SKKP Skema Reguler</h4>
-                  <p className="text-[10px] text-slate-500 font-medium">Distribusi penerbitan Surat Keterangan Keterampilan Pelaut (SKKP) per wilayah kerja Banten & Lampung</p>
+                  <p className="text-[10px] text-slate-500 font-medium">Distribusi penerbitan Sertifikat Kelaikan Kapal Perikanan (SKKP) per wilayah kerja Banten & Lampung</p>
                 </div>
               </div>
 

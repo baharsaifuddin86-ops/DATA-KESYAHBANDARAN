@@ -240,7 +240,7 @@ export default function PortFormModal({
                 <input
                   type="text"
                   required
-                  placeholder="Contoh: PPI Labuhan Maringgai"
+                  placeholder="Contoh: PP Labuhan Maringgai"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="px-3 py-2.5 bg-slate-50 border border-sky-200/60 rounded-lg text-slate-700 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-sky-500/20 focus:bg-white transition-all text-xs"
@@ -255,10 +255,10 @@ export default function PortFormModal({
                   onChange={(e) => setPortClass(e.target.value as PortClass)}
                   className="px-3 py-2.5 bg-slate-50 border border-sky-200/60 rounded-lg text-slate-700 focus:outline-hidden focus:ring-2 focus:ring-sky-500/20 focus:bg-white transition-all text-xs cursor-pointer"
                 >
-                  <option value="PPS">PPS - Samudera (Tipe A)</option>
-                  <option value="PPN">PPN - Nusantara (Tipe B)</option>
-                  <option value="PPP">PPP - Pantai (Tipe C)</option>
-                  <option value="PPI">PPI - Pendaratan Ikan (Tipe D)</option>
+                  <option value="PPS">PPS - Pelabuhan Perikanan Samudera (Tipe A)</option>
+                  <option value="PPN">PPN - Pelabuhan Perikanan Nusantara (Tipe B)</option>
+                  <option value="PPP">PPP - Pelabuhan Perikanan Pantai (Tipe C)</option>
+                  <option value="PPI">PP - Pelabuhan Perikanan (Tipe D)</option>
                 </select>
               </div>
 

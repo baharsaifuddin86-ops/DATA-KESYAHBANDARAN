@@ -253,7 +253,7 @@ export default function PortListPanel({
                       : 'bg-white text-slate-600 hover:bg-sky-50 border border-sky-100/80'
                   }`}
                 >
-                  {cls === 'All' ? 'Semua' : cls}
+                  {cls === 'All' ? 'Semua' : (cls === 'PPI' ? 'PP' : cls)}
                 </button>
               ))}
             </div>
@@ -280,7 +280,7 @@ export default function PortListPanel({
                   {/* Top Row: Class Badge & Actions */}
                   <div className="flex items-center justify-between gap-1.5">
                     <span className={`px-1.5 py-0.5 rounded text-[9px] font-extrabold tracking-wide border uppercase shrink-0 ${getClassBadge(port.class)}`}>
-                      {port.class}
+                      {port.class === 'PPI' ? 'PP' : port.class}
                     </span>
 
                     {/* Actions */}

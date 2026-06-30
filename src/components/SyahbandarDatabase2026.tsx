@@ -176,8 +176,8 @@ export const SyahbandarDatabase2026: React.FC = () => {
         };
       case 'skkp':
         return {
-          title: "SKKP (Surat Keterangan Keterampilan Pelaut)",
-          desc: "Penerbitan Surat Keterangan Keterampilan Pelaut Perikanan skema izin daerah.",
+          title: "SKKP (Sertifikat Kelaikan Kapal Perikanan)",
+          desc: "Penerbitan Sertifikat Kelaikan Kapal Perikanan (SKKP) skema izin daerah.",
           icon: <Award className="w-5 h-5 text-indigo-600" />,
           colorClass: "bg-indigo-50 text-indigo-850 border-indigo-100",
           stats: [

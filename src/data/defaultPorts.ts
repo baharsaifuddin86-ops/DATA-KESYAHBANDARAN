@@ -75,7 +75,7 @@ export const defaultPorts: Port[] = [
   },
   {
     id: 'port-banten-4',
-    name: 'Pangkalan Pendaratan Ikan (PPI) Kronjo',
+    name: 'Pelabuhan Perikanan (PP) Kronjo',
     region: 'Banten',
     district: 'Tangerang',
     latitude: -6.0546001200704955,
@@ -87,7 +87,7 @@ export const defaultPorts: Port[] = [
     facilities: ['Tempat Pelelangan Ikan (TPI)', 'Tambat Labuh', 'Pasar Ikan Basah', 'Kedai Pesisir'],
     description: 'Pusat pendaratan ikan pesisir utara Tangerang yang menyuplai kebutuhan seafood segar untuk pasar Jabodetabek. Didominasi oleh tangkapan komoditas benthos and estuari.',
     syahbandarStaff: [
-      { position: 'Syahbandar / Pengelola PPI Kronjo', name: 'H. Sanusi', stay: 'Kronjo' }
+      { position: 'Syahbandar / Pengelola PP Kronjo', name: 'H. Sanusi', stay: 'Kronjo' }
     ],
     vesselBreakdown: {
       small: 15,
@@ -138,7 +138,7 @@ export const defaultPorts: Port[] = [
   },
   {
     id: 'port-banten-cituis',
-    name: 'Pangkalan Pendaratan Ikan (PPI) Cituis',
+    name: 'Pelabuhan Perikanan (PP) Cituis',
     region: 'Banten',
     district: 'Tangerang',
     latitude: -6.032723572621554,
@@ -148,9 +148,9 @@ export const defaultPorts: Port[] = [
     activeVessels: 7,
     commodities: ['Kembung', 'Cumi-cumi', 'Bawal Hitam', 'Selar', 'Teri'],
     facilities: ['Tempat Pelelangan Ikan (TPI)', 'Dermaga Sandar', 'Suplai Air Bersih', 'Tambat Labuh'],
-    description: 'PPI Cituis berlokasi di Kecamatan Suryabahari, Kabupaten Tangerang, Banten. Berfungsi sebagai salah satu sentra pendaratan ikan andalan masyarakat Tangerang Utara.',
+    description: 'PP Cituis berlokasi di Kecamatan Suryabahari, Kabupaten Tangerang, Banten. Berfungsi sebagai salah satu sentra pendaratan ikan andalan masyarakat Tangerang Utara.',
     syahbandarStaff: [
-      { position: 'Syahbandar / Pengelola PPI Cituis', name: 'H. Akhmad Fauzi', stay: 'Cituis' }
+      { position: 'Syahbandar / Pengelola PP Cituis', name: 'H. Akhmad Fauzi', stay: 'Cituis' }
     ],
     vesselBreakdown: {
       small: 5,
@@ -167,7 +167,7 @@ export const defaultPorts: Port[] = [
   },
   {
     id: 'port-lampung-muarapiluk',
-    name: 'Pangkalan Pendaratan Ikan (PPI) Muara Piluk',
+    name: 'Pelabuhan Perikanan (PP) Muara Piluk',
     region: 'Lampung',
     district: 'Lampung Selatan',
     latitude: -5.8594383562983525,
@@ -177,7 +177,7 @@ export const defaultPorts: Port[] = [
     activeVessels: 5,
     commodities: ['Tongkol', 'Layang', 'Kembung', 'Cumi-cumi', 'Teri'],
     facilities: ['Tempat Pelelangan Ikan (TPI)', 'Dermaga Kayu', 'Tambatan Perahu', 'Kios Nelayan'],
-    description: 'PPI Muara Piluk terletak di kawasan Bakauheni, Kabupaten Lampung Selatan. Pelabuhan pendaratan ini melayani armada perikanan pantai di ujung selatan Pulau Sumatera.',
+    description: 'PP Muara Piluk terletak di kawasan Bakauheni, Kabupaten Lampung Selatan. Pelabuhan pendaratan ini melayani armada perikanan pantai di ujung selatan Pulau Sumatera.',
     syahbandarStaff: [
       { position: 'Syahbandar', name: 'Zainal. K. S. Pi, M.Ling', stay: 'Syahbandar Prov. Lampung' }
     ],
